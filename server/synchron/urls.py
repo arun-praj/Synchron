@@ -50,9 +50,9 @@ schema_view = get_schema_view(
 
 urlpatterns = [
     path('dj/admin/', admin.site.urls),
-    path('',include('authen.urls')),
-    path('api/',include('frontend.urls')), # frontend routes
-    path('api/',include(router.urls)), #all routes registered in router will be added through this
+    path('dj/',include('authen.urls')),
+    # path('api/',include('frontend.urls')), # frontend routes
+    path('dj/api/',include(router.urls)), #all routes registered in router will be added through this
     path('dj/swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     # path('syncup-board/',include('syncup_board.urls')),
     # path(r'^redoc/$', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),

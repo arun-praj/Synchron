@@ -52,7 +52,7 @@ INSTALLED_APPS = [
     'syncup_board',
     'standup_card',
     'users',
-    'frontend'
+    # 'frontend'
 ]
 
 REST_FRAMEWORK = {
@@ -79,7 +79,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     # "corsheaders.middleware.CorsMiddleware",
 ]
-CSRF_TRUSTED_ORIGINS = ['http://127.0.0.1:4000']
+CSRF_TRUSTED_ORIGINS = ['http://127.0.0.1:4000','http://localhost:4000']
 CORS_ALLOWED_ORIGINS = [
      "http://127.0.0.1:8000",
 ]

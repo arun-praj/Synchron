@@ -1,75 +1,72 @@
 version: '3.7'
 services:
+   postgres:
+      container_name: postgres
+      hostname: postgres
+      image: postgres:latest
+      env_file: .env
+      ports:
+         - 5432:5432
+      restart: always
+      volumes:
+         - ./pg_data:/var/lib/postgresql/data
 
-  postgres:
-    container_name: postgres
-    hostname: postgres
-    image: postgres:latest
-    env_file: .env
-    ports:
-      - 5432:5432
-    restart: always
-    volumes:
-      - ./pg_data:/var/lib/postgresql/data
-  
-  nginx:
-    container_name: nginx
-    build: 
-      context: ./nginx
-      dockerfile: Dockerfile
-    ports:
-      - 4000:80
-    restart: always
-    # depends_on:
-    #   - web
-    # volumes:
-      # - ./server/static/:/static
-      # - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
-   
-    
-  web:
-    container_name: django_web
-    build: 
-      context: ./server
-      dockerfile: Dockerfile.dev
-    volumes:
-      - ./server:/code
-    ports:
-      - 8000:8000
-    restart: always
-    depends_on:
-      - postgres
+   nginx:
+      container_name: nginx
+      build:
+         context: ./nginx
+         dockerfile: Dockerfile
+      ports:
+         - 4000:80
+      restart: always
+      # depends_on:
+      #   - web
+      volumes:
+         - ./server/static/:/static
+         # - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
 
+   web:
+      container_name: django_web
+      build:
+         context: ./server
+         dockerfile: Dockerfile.dev
+      volumes:
+         - ./server:/code
+      ports:
+         - 8000:8000
+      restart: always
+      depends_on:
+         - postgres
 
-  client:
-    # tty: true
-    container_name: client
-    stdin_open: true
-    build: 
-      context: ./client
-      dockerfile: Dockerfile
-    volumes:
-      - /app/node_modules
-      - ./client:/app
-      - /app/.next
-    ports:
-      - 3000:3000
-    # depends_on:
-    #   - web
-    # command : npm start
+   client:
+      # tty: true
+      container_name: client
+      stdin_open: true
+      build:
+         context: ./client
+         dockerfile: Dockerfile
+      volumes:
+         - /app/node_modules
+         - ./client:/app
+         - /app/.next
+      ports:
+         - 3000:3000
+      # depends_on:
+      #   - web
+      # command : npm start
 
-  pgadmin:
-    container_name: pg_admin
-    image: dpage/pgadmin4
-    restart: always
-    environment:
-      PGADMIN_DEFAULT_EMAIL: admin@admin.com
-      PGADMIN_DEFAULT_PASSWORD: root
-      PGADMIN_LISTEN_PORT: 80
-    ports:
-      - "5050:80"
-    volumes:
-      - pgadmin-data:/var/lib/pgadmin
+   pgadmin:
+      container_name: pg_admin
+      image: dpage/pgadmin4
+      restart: always
+      environment:
+         PGADMIN_DEFAULT_EMAIL: admin@admin.com
+         PGADMIN_DEFAULT_PASSWORD: root
+         PGADMIN_LISTEN_PORT: 80
+      ports:
+         - '5050:80'
+      volumes:
+         - pgadmin-data:/var/lib/pgadmin
 volumes:
-  pg_data:
-  pgadmin-data:
+   pg_data:
+   pgadmin-data:
