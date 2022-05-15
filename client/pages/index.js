@@ -1,16 +1,26 @@
 import Head from 'next/head'
 import Image from 'next/image'
 import styles from '../styles/Home.module.css'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
+import Router from 'next/router'
 
 export default function Home() {
+   const [res, setRes] = useState(null)
+   const [resStatus, setResStatus] = useState(null)
    useEffect(() => {
+      const { pathname } = Router
       const fetchData = async () => {
          const res = await fetch('http://127.0.0.1:4000/dj/api/users/me', { method: 'GET', credentials: 'include' })
          console.log(res)
+         const data = await res.json()
+         setResStatus(res.status)
+         setRes(data)
       }
       fetchData()
    }, [])
+   useEffect(() => {
+      if (resStatus === 403) Router.push(`/dj/accounts/login`)
+   }, [resStatus])
    return (
       <div className={styles.container}>
          <Head>
@@ -66,9 +76,8 @@ export default function Home() {
 }
 
 export async function getServerSideProps(context) {
-   // const cookies = context.req.headers.cookie
    // const res = await fetch('http://127.0.0.1:4000/dj/api/users/me', { method: 'GET', credentials: 'include' })
+   // const data = await res.json()
 
-   // console.log(res)
    return { props: {} }
 }
