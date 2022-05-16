@@ -14,7 +14,7 @@ from drf_yasg.utils import swagger_auto_schema
 
 
 from authen.models import roles
-from .serializers import  UserListSerializer,UserPartialUpdateSerializer
+from .serializers import  UserListSerializer,UserPartialUpdateSerializer,LoggedUserSerializer
 
 from synchron.permission import isScrumMaster
 from .permission import IsAuthorOrReadOnly
@@ -87,7 +87,7 @@ class UserViewSet(viewsets.ModelViewSet):
         # return Response({
         #     'serializer':UserListSerializer(logged_user),'user':logged_user
         # })
-        return Response(UserListSerializer(logged_user,context={'request': request}).data)
+        return Response(LoggedUserSerializer(logged_user,context={'request': request}).data)
 
 
 

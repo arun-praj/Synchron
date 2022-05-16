@@ -1,8 +1,10 @@
 from dataclasses import field
 from pyexpat import model
-from django.contrib.auth.models import User, Group
+from statistics import mode
+from django.contrib.auth.models import User
 from rest_framework import serializers
-
+from team.api.serializers import TeamSerializer
+from syncup_board.serializers import SyncupBoardSerializer
 class UserListSerializer(serializers.ModelSerializer):
     '''
         Serializer class for listing users
@@ -33,3 +35,12 @@ class UserPartialUpdateSerializer(serializers.ModelSerializer):
 #         model= Group
 #         fields=['url','name']
 
+class LoggedUserSerializer(serializers.ModelSerializer):
+    '''
+        Serializer class for User who is logged in
+    '''
+    teams = TeamSerializer(many=True,read_only=False)
+    roles = serializers.SlugRelatedField(read_only=True, slug_field='role')
+    class Meta:
+        model = User
+        fields = ['id','date_joined','username','email','groups','roles','teams','first_name','last_name','is_staff','is_active','last_login','teams']

@@ -44,7 +44,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'drf_yasg',
     'django_filters',
-    # 'corsheaders',
+    'corsheaders',
     #local
 
     'authen',
@@ -72,6 +72,7 @@ REST_FRAMEWORK = {
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    "corsheaders.middleware.CorsMiddleware",
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -81,7 +82,9 @@ MIDDLEWARE = [
 ]
 CSRF_TRUSTED_ORIGINS = ['http://127.0.0.1:4000','http://localhost:4000']
 CORS_ALLOWED_ORIGINS = [
-     "http://127.0.0.1:8000",
+     "http://127.0.0.1:4000",
+     'http://localhost:4000'
+    #  "http://127.0.0.1:4000/dj"
 ]
 ROOT_URLCONF = 'synchron.urls'
 
@@ -162,7 +165,7 @@ STATICFILES_DIRS = [
 STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 STATIC_URL = '/static/'
 # STATIC_ROOT = 'static/'
-LOGIN_REDIRECT_URL = '/dj/profile/'
+LOGIN_REDIRECT_URL = '/profile/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field

@@ -3,7 +3,8 @@ from django.core import serializers as dj_serializer
 from team.models import Team
 from django.contrib.auth.models import User
 
-from users.serializers import UserListSerializer
+from syncup_board.serializers import SyncupBoardSerializer
+# from users.serializers import UserListSerializer
 
 
 class UserRelatedField(serializers.RelatedField):
@@ -20,9 +21,8 @@ class UserRelatedField(serializers.RelatedField):
         return instance
 
     def to_representation(self, value):
-        # print("ASASDASDASDADASD",value)
-        return str(value)
-        # return dj_serializer.serialize('json',value) 
+        return str(f'{value.username} ({value.roles})')
+       
 
     def to_internal_value(self, data):
         return User.objects.get(username=data)
@@ -38,13 +38,16 @@ class TeamSerializer(serializers.ModelSerializer):
     # users = serializers.PrimaryKeyRelatedField(many=True,queryset=User.objects.all())
 
     ''' If you want user name of particular team. Easier to read from swagger'''    
-    users = UserRelatedField(many=True,queryset=User.objects.all())
+    users = UserRelatedField(many=True,queryset=User.objects.all(),read_only=False)
 
     ''' All field of users are returned. Use this when developing frontend '''
     # users = UserListSerializer(many=True)
+    print(dir(users))
+    syncup_board = SyncupBoardSerializer(many=False,read_only=False)
+
     class Meta:
         model=Team
-        fields=['id','created_at','updated_at','teamName','users','is_active']   
+        fields=['id','created_at','updated_at','teamName','users','is_active','syncup_board']   
         'or use fields="__all__"'
 
     
