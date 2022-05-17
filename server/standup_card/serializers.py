@@ -1,14 +1,40 @@
-from rest_framework.serializers import ModelSerializer
+
+from rest_framework import serializers
+
 from dataclasses import field
 from .models import StandupCard,Update
+from django.contrib.auth.models import User
 
-class UpdateSerializer(ModelSerializer):
+class UserRelatedField(serializers.RelatedField):
+
+    '''
+        Custom realtional field:
+        Describes exactly how the output representation should be generated from the model instance.
+
+        See also:
+        _________
+        https://www.django-rest-framework.org/api-guide/relations/#custom-relational-fields
+    '''
+    def display_value(self, instance):
+        return instance
+
+    def to_representation(self, value):
+        return str(f'{value.username}')
+
+class UserRoleRelatedField(serializers.RelatedField):
+     def to_representation(self, value):
+        return str(f'{value.roles}')
+
+class UpdateSerializer(serializers.ModelSerializer):
+    user = UserRelatedField(many=False,queryset=User.objects.all(),read_only=False,source='user_id')
+    user_id = serializers.PrimaryKeyRelatedField(many=False,read_only=True)
+    role = UserRoleRelatedField(many=False,queryset=User.objects.all(),read_only=False,source='user_id')
     class Meta:
         model= Update
-        fields = '__all__'
+        fields = ['id','comment','created_at','updated_at','is_active','updated_at','user_id','user','role']
 
 
-class StandupCardSerializer(ModelSerializer):
+class StandupCardSerializer(serializers.ModelSerializer):
     ''' 
         Serializer for StandupCard model.
     '''

@@ -1,21 +1,42 @@
 import React, { useEffect } from 'react'
-import Head from 'next/head'
 import { useMemo, useState } from 'react'
-import useAuth from '../hooks/useAuth'
-import NavBar from '../components/NavBar'
-
+import Head from 'next/head'
 import FullCalendar, { formatDate } from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from '@fullcalendar/interaction'
+
+import useAuth from '../hooks/useAuth'
+import NavBar from '../components/NavBar'
+import BootstrapModal from '../components/Modal'
+import Accordion from 'react-bootstrap/Accordion'
 
 export default function Home() {
    const me = useAuth()
    const [weekendsVisible, setWeekendsVisible] = useState(true)
    const [showChild, setShowChild] = useState(false)
+   const [events, setEvents] = useState([{}])
+   const [showModal, setShowModal] = useState(false)
+   const [selectedEvent, setSelectedEvent] = useState(null)
    useEffect(() => {
       setShowChild(true)
    }, [])
-   console.log(me)
+
+   useEffect(() => {
+      const events = me?.teams[0]?.syncup_board?.standup_card.map((card) => {
+         return {
+            title: card.extraNote,
+            start: card.created_at,
+            id: card.id,
+            updated_at: card.updated_at,
+            updates: card.updates,
+            backgroundColor: 'red',
+            borderColor: 'red',
+            textColor: 'red',
+         }
+      })
+
+      setEvents(events)
+   }, [me])
 
    if (!showChild) {
       return null
@@ -23,6 +44,7 @@ export default function Home() {
    if (typeof window === 'undefined') {
       return <></>
    }
+
    return (
       <div>
          <Head>
@@ -51,7 +73,7 @@ export default function Home() {
                      headerToolbar={{
                         left: 'prev,next today',
                         center: 'title',
-                        right: 'dayGridMonth,timeGridWeek,timeGridDay',
+                        right: 'dayGridMonth,dayGridWeek,dayGridDay',
                      }}
                      weekends={weekendsVisible}
                      initialView='dayGridMonth'
@@ -61,12 +83,13 @@ export default function Home() {
                      selectable={true}
                      selectMirror={true}
                      dayMaxEvents={true}
-                     events={[
-                        {
-                           title: 'Have become comforatably numb',
-                           start: '2022-05-15 07:55:33.091813+00',
-                        },
-                     ]}
+                     eventClick={(eventClickInfo) => {
+                        eventClickInfo.jsEvent.preventDefault()
+                        setShowModal(true)
+                        // console.log(eve);
+                        setSelectedEvent(eventClickInfo.event)
+                     }}
+                     events={events}
                   />
                </div>
                <div
@@ -76,49 +99,52 @@ export default function Home() {
                      // textAlign: 'center',
                   }}
                >
-                  <div>
-                     <h3>Team info</h3>
-                     <div>
-                        {me?.teams.length > 0 ? (
+                  <Accordion defaultActiveKey='0'>
+                     <Accordion.Item eventKey='0'>
+                        <Accordion.Header>Team info</Accordion.Header>
+                        <Accordion.Body>
                            <div>
-                              {me?.teams.map((team) => {
-                                 return (
-                                    <ol>
-                                       <li>{team.teamName}</li>
-                                       {team.users?.map((user) => {
-                                          return (
-                                             <ul>
-                                                <li>{user}</li>
-                                             </ul>
-                                          )
-                                       })}
-                                    </ol>
-                                 )
-                              })}
+                              {me?.teams?.length > 0 ? (
+                                 <div>
+                                    {me?.teams.map((team) => {
+                                       return (
+                                          <ol key={team.id}>
+                                             <li>{team.teamName}</li>
+                                             {team.users?.map((user) => {
+                                                return (
+                                                   <ul key={user}>
+                                                      <li>{user}</li>
+                                                   </ul>
+                                                )
+                                             })}
+                                          </ol>
+                                       )
+                                    })}
+                                 </div>
+                              ) : (
+                                 <div>You are not in any team.</div>
+                              )}
                            </div>
-                        ) : (
-                           <div>You are not in any team.</div>
-                        )}
-                     </div>
-                     <div>
-                        <h3>Calendar settings</h3>
-                        <div>
+                        </Accordion.Body>
+                     </Accordion.Item>
+                     <Accordion.Item eventKey='1'>
+                        <Accordion.Header>Calendar settings</Accordion.Header>
+                        <Accordion.Body>
                            <div
                               onClick={() => {
                                  setWeekendsVisible(!weekendsVisible)
                               }}
                            >
-                              <input type={'checkbox'} checked={weekendsVisible} />
-                              <label for='vehicle1'> &nbsp; &nbsp;Display weekend </label>
+                              <input type={'checkbox'} checked={weekendsVisible} readOnly />
+                              <label htmlFor='vehicle1'> &nbsp; &nbsp;Display weekend </label>
                            </div>
-
-                           <br></br>
-                        </div>
-                     </div>
-                  </div>
+                        </Accordion.Body>
+                     </Accordion.Item>
+                  </Accordion>
                </div>
             </div>
          </div>
+         <BootstrapModal show={showModal} handleClose={setShowModal} event={selectedEvent} />
       </div>
    )
 }

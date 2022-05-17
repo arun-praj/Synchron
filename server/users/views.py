@@ -65,7 +65,7 @@ class UserViewSet(viewsets.ModelViewSet):
             _______
             permission_classes : list
         """
-        if self.action == 'list' or self.action == 'change_role' or self.action == 'me':
+        if self.action == 'list' or self.action == 'change_role':
             permission_classes = [IsAuthenticated,isScrumMaster]
         else:
             permission_classes = [IsAuthenticated,IsAuthorOrReadOnly,]
@@ -84,9 +84,7 @@ class UserViewSet(viewsets.ModelViewSet):
     def me(self,request,pk=None):
         logged_user = request.user
 
-        # return Response({
-        #     'serializer':UserListSerializer(logged_user),'user':logged_user
-        # })
+        
         return Response(LoggedUserSerializer(logged_user,context={'request': request}).data)
 
 
