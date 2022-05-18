@@ -7,15 +7,12 @@ const BootstrapModal = ({ show, handleClose, event }) => {
    const id = event?.extendedProps.id || 'null'
    const updates = event?.extendedProps.updates
 
-   console.log(updates)
    const groupUpdates = updates?.reduce(function (r, a) {
       r[a.user_id] = r[a.user_id] || []
       r[a.user_id].push(a)
       return r
    }, Object.create(null))
-   console.log(groupUpdates)
 
-   // console.log(event?.updated_at)
    return (
       <Modal show={show} size='lg' onHide={() => handleClose(false)}>
          <Modal.Header closeButton>

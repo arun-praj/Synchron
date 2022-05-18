@@ -12,6 +12,7 @@ const useAuth = () => {
          const data = await res.json()
          setResStatus(res.status)
          setResData(data)
+         console.log(data)
       }
       fetchData()
    }, [])

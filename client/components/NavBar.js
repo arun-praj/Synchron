@@ -1,5 +1,6 @@
 import React from 'react'
-
+import Router from 'next/router'
+import { Button } from 'react-bootstrap'
 import useAuth from '../hooks/useAuth'
 import Link from 'next/link'
 const NavBar = () => {
@@ -47,9 +48,25 @@ const NavBar = () => {
                   </div>
 
                   <div className='d-flex align-items-center'>
-                     <div className=''>
+                     <div className='d-flex'>
                         <a
                            className=' d-flex align-items-center text-decoration-none'
+                           href='#'
+                           id='navbarDropdownMenuAvatar'
+                           role='button'
+                           data-mdb-toggle='dropdown'
+                           aria-expanded='false'
+                           onClick={async (e) => {
+                              e.preventDefault()
+                              const res = await fetch('http://127.0.0.1:4000/dj/accounts/logout', { method: 'GET', credentials: 'include' })
+                              console.log(res)
+                              Router.push(`/dj/accounts/login`)
+                           }}
+                        >
+                           <Button type='submit'>logout</Button>
+                        </a>
+                        <a
+                           className=' d-flex align-items-center text-decoration-none px-2'
                            href='#'
                            id='navbarDropdownMenuAvatar'
                            role='button'
