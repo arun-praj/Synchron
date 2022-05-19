@@ -8,6 +8,7 @@ import interactionPlugin from '@fullcalendar/interaction'
 import useAuth from '../hooks/useAuth'
 import NavBar from '../components/NavBar'
 import BootstrapModal from '../components/Modal'
+import AddCardModal from '../components/AddCardModal'
 import Accordion from 'react-bootstrap/Accordion'
 
 export default function Home() {
@@ -16,6 +17,7 @@ export default function Home() {
    const [showChild, setShowChild] = useState(false)
    const [events, setEvents] = useState([{}])
    const [showModal, setShowModal] = useState(false)
+   const [showAddCardModal, setShowAddCardModal] = useState(false)
    const [selectedEvent, setSelectedEvent] = useState(null)
    useEffect(() => {
       setShowChild(true)
@@ -68,10 +70,18 @@ export default function Home() {
                >
                   <FullCalendar
                      plugins={[dayGridPlugin, interactionPlugin]}
+                     customButtons={{
+                        myCustomButton: {
+                           text: 'Add Card',
+                           click: function () {
+                              setShowAddCardModal(true)
+                           },
+                        },
+                     }}
                      headerToolbar={{
                         left: 'prev,next today',
                         center: 'title',
-                        right: 'dayGridMonth,dayGridWeek,dayGridDay',
+                        right: 'myCustomButton dayGridMonth,dayGridWeek,dayGridDay',
                      }}
                      weekends={weekendsVisible}
                      initialView='dayGridMonth'
@@ -84,7 +94,6 @@ export default function Home() {
                      eventClick={(eventClickInfo) => {
                         eventClickInfo.jsEvent.preventDefault()
                         setShowModal(true)
-                        // console.log(eve);
                         setSelectedEvent(eventClickInfo.event)
                      }}
                      events={events}
@@ -146,6 +155,7 @@ export default function Home() {
             </div>
          </div>
          <BootstrapModal show={showModal} handleClose={setShowModal} event={selectedEvent} />
+         <AddCardModal show={showAddCardModal} handleClose={setShowAddCardModal} />
       </div>
    )
 }

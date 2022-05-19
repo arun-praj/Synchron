@@ -50,23 +50,7 @@ const NavBar = () => {
                   <div className='d-flex align-items-center'>
                      <div className='d-flex'>
                         <a
-                           className=' d-flex align-items-center text-decoration-none'
-                           href='#'
-                           id='navbarDropdownMenuAvatar'
-                           role='button'
-                           data-mdb-toggle='dropdown'
-                           aria-expanded='false'
-                           onClick={async (e) => {
-                              e.preventDefault()
-                              const res = await fetch('http://127.0.0.1:4000/dj/accounts/logout', { method: 'GET', credentials: 'include' })
-                              console.log(res)
-                              Router.push(`/dj/accounts/login`)
-                           }}
-                        >
-                           <Button type='submit'>logout</Button>
-                        </a>
-                        <a
-                           className=' d-flex align-items-center text-decoration-none px-2'
+                           className=' d-flex align-items-center text-decoration-none px-4'
                            href='#'
                            id='navbarDropdownMenuAvatar'
                            role='button'
@@ -75,6 +59,39 @@ const NavBar = () => {
                         >
                            {me.username} ({me.roles})
                         </a>
+                        <button
+                           type='button'
+                           className='btn btn-outline-danger'
+                           onClick={async (e) => {
+                              e.preventDefault()
+                              const res = await fetch('http://127.0.0.1:4000/dj/accounts/logout', { method: 'GET', credentials: 'include' })
+                              console.log(res)
+                              Router.push(`/dj/accounts/login`)
+                           }}
+                        >
+                           <svg
+                              xmlns='http://www.w3.org/2000/svg'
+                              width='16'
+                              height='16'
+                              style={{
+                                 marginBottom: '3px',
+                                 marginRight: '6px',
+                              }}
+                              fill='currentColor'
+                              class='bi bi-box-arrow-right'
+                              viewBox='0 0 16 16'
+                           >
+                              <path
+                                 fill-rule='evenodd'
+                                 d='M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0v2z'
+                              ></path>
+                              <path
+                                 fill-rule='evenodd'
+                                 d='M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z'
+                              ></path>
+                           </svg>
+                           Logout
+                        </button>
                      </div>
                   </div>
                </div>
