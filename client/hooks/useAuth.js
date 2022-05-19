@@ -8,11 +8,15 @@ const useAuth = () => {
    useEffect(() => {
       const { pathname } = Router
       const fetchData = async () => {
-         const res = await fetch('http://127.0.0.1:4000/dj/api/users/me', { method: 'GET', credentials: 'include' })
-         const data = await res.json()
-         setResStatus(res.status)
-         setResData(data)
-         console.log(data)
+         try {
+            const res = await fetch('http://127.0.0.1:4000/dj/api/users/me', { method: 'GET', credentials: 'include' })
+            const data = await res.json()
+            setResStatus(res.status)
+            setResData(data)
+            console.log(data)
+         } catch (e) {
+            console.log(e)
+         }
       }
       fetchData()
    }, [])

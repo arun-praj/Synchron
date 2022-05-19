@@ -4,7 +4,7 @@ from team.models import Team
 from django.contrib.auth.models import User
 
 from syncup_board.serializers import SyncupBoardSerializer
-# from users.serializers import UserListSerializer
+
 
 
 class UserRelatedField(serializers.RelatedField):
@@ -21,7 +21,12 @@ class UserRelatedField(serializers.RelatedField):
         return instance
 
     def to_representation(self, value):
-        return str(f'{value.username} ({value.roles})')
+        return {
+            'username': value.username,
+            'user_id':value.id,
+            'role':f'{value.roles}'
+        }
+        # str(f'{value.username} ({value.roles})')
        
 
     def to_internal_value(self, data):
@@ -42,7 +47,6 @@ class TeamSerializer(serializers.ModelSerializer):
 
     ''' All field of users are returned. Use this when developing frontend '''
     # users = UserListSerializer(many=True)
-    print(dir(users))
     syncup_board = SyncupBoardSerializer(many=False,read_only=False)
 
     class Meta:

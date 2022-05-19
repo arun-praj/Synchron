@@ -120,7 +120,9 @@ export default function Home() {
                                              {team.users?.map((user) => {
                                                 return (
                                                    <ul key={user}>
-                                                      <li>{user}</li>
+                                                      <li>
+                                                         {user.username} ({user.role})
+                                                      </li>
                                                    </ul>
                                                 )
                                              })}
